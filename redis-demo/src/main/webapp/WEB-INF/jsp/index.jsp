@@ -9,11 +9,8 @@
 </head>
 <body>
 	<center>
-		Background: <a href="${ctx }/background/login">login</a>
-		User Index: <a href="${ctx }/background/user/index">goto</a>
-		Admin Index: <a href="${ctx }/background/admin/index">goto</a>
-		Logout: <form method="post" action="${ctx }/background/logout">
-		<input type="submit" value="submit"/></form>
+		Add kill goods: <a href="${ctx }/add">login</a>
+		Kill goods: <a href="${ctx }/kill">goto</a>
 	</center>
 </body>
 </html>
