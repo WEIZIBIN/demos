@@ -1,4 +1,4 @@
-package github.weizibin;
+package github.weizibin.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
