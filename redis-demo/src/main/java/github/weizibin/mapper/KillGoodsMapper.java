@@ -1,4 +1,4 @@
-package github.weizibin.persistence;
+package github.weizibin.mapper;
 
 import github.weizibin.po.KillGoods;
 import org.springframework.stereotype.Repository;

@@ -32,11 +32,11 @@
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="mapperLocations" value="classpath*:github/weizibin/persistence/xml/*.xml" />
+		<property name="mapperLocations" value="classpath*:github/weizibin/persistence/*.xml" />
 	</bean>
 	
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
-        <property name="basePackage" value="com.daniel.mapper" />  
+        <property name="basePackage" value="github.weizibin.mapper" />
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>  
     </bean>  
 
@@ -44,7 +44,7 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	
+
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	
 </beans>

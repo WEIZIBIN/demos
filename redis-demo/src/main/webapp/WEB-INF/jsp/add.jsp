@@ -9,8 +9,12 @@
 </head>
 <body>
 	<center>
-		Add kill goods: <a href="${ctx }/add">add</a><br>
-		Kill goods: <a href="${ctx }/kill">kill</a><br>
+		<form action="${ctx}/add" method="post">
+			<label>name:</label><input type="text" name="name" ><br>
+			<label>stock:</label><input type="number" name="stock" min="0"><br>
+			<label>kill time:</label><input type="text" name="startKillTimeStr" ><br>Example:2017-12-20 10:20:00<br>
+			<input type="submit" value="add"></input>
+		</form>
 	</center>
 </body>
 </html>

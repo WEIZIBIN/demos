@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="github.weizibin.persistence.KillGoodsMapper" >
+<mapper namespace="github.weizibin.mapper.KillGoodsMapper" >
   <resultMap id="BaseResultMap" type="github.weizibin.po.KillGoods" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="stock" property="stock" jdbcType="INTEGER" />
     <result column="in_stock" property="inStock" jdbcType="BIT" />
+    <result column="start_kill_time" property="startKillTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, stock, in_stock
+    id, name, stock, in_stock, start_kill_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -22,9 +23,9 @@
   </delete>
   <insert id="insert" parameterType="github.weizibin.po.KillGoods" >
     insert into kill_goods (id, name, stock, 
-      in_stock)
+      in_stock, start_kill_time)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{stock,jdbcType=INTEGER}, 
-      #{inStock,jdbcType=BIT})
+      #{inStock,jdbcType=BIT}, #{startKillTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="github.weizibin.po.KillGoods" >
     insert into kill_goods
@@ -41,6 +42,9 @@
       <if test="inStock != null" >
         in_stock,
       </if>
+      <if test="startKillTime != null" >
+        start_kill_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -54,6 +58,9 @@
       </if>
       <if test="inStock != null" >
         #{inStock,jdbcType=BIT},
+      </if>
+      <if test="startKillTime != null" >
+        #{startKillTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -69,6 +76,9 @@
       <if test="inStock != null" >
         in_stock = #{inStock,jdbcType=BIT},
       </if>
+      <if test="startKillTime != null" >
+        start_kill_time = #{startKillTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -76,7 +86,8 @@
     update kill_goods
     set name = #{name,jdbcType=VARCHAR},
       stock = #{stock,jdbcType=INTEGER},
-      in_stock = #{inStock,jdbcType=BIT}
+      in_stock = #{inStock,jdbcType=BIT},
+      start_kill_time = #{startKillTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

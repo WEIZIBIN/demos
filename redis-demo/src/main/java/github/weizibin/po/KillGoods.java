@@ -1,5 +1,7 @@
 package github.weizibin.po;
 
+import java.util.Date;
+
 public class KillGoods {
     private Integer id;
 
@@ -8,6 +10,8 @@ public class KillGoods {
     private Integer stock;
 
     private Boolean inStock;
+
+    private Date startKillTime;
 
     public Integer getId() {
         return id;
@@ -39,5 +43,13 @@ public class KillGoods {
 
     public void setInStock(Boolean inStock) {
         this.inStock = inStock;
+    }
+
+    public Date getStartKillTime() {
+        return startKillTime;
+    }
+
+    public void setStartKillTime(Date startKillTime) {
+        this.startKillTime = startKillTime;
     }
 }
