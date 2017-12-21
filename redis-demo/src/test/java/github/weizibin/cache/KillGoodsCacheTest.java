@@ -27,4 +27,10 @@ public class KillGoodsCacheTest {
         killGoodsCache.put(killGoods);
     }
 
+    @Test
+    public void testGet() {
+        testPut();
+        assert killGoodsCache.getById(1).getId().equals(1);
+    }
+
 }

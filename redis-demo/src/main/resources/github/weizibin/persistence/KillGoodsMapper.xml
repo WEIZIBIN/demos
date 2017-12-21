@@ -90,4 +90,10 @@
       start_kill_time = #{startKillTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getAllInStock" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from kill_goods
+    where in_stock = 1
+  </select>
 </mapper>

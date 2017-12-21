@@ -79,4 +79,9 @@
       kill_time = #{killTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from kill_goods_record
+  </select>
 </mapper>
