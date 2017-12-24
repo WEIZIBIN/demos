@@ -8,10 +8,10 @@
     <dubbo:application name="dubbo-privider-1"/>
 
     <!-- 使用multicast广播注册中心暴露服务地址 -->
-    <dubbo:registry address="zookeeper://66.112.219.101:2181"/>
+    <dubbo:registry address="zookeeper://123.123.123.123:2181"/>
 
     <!-- 用dubbo协议在20880端口暴露服务 -->
-    <dubbo:protocol name="dubbo" port="20880"/>
+    <dubbo:protocol name="dubbo" port="20881"/>
 
     <!-- 声明需要暴露的服务接口 -->
     <dubbo:service interface="github.weizibin.service.DemoService" ref="demoService"/>
