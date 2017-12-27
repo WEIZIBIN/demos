@@ -21,7 +21,7 @@
     delete from kill_goods
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="github.weizibin.po.KillGoods" >
+  <insert id="insert" parameterType="github.weizibin.po.KillGoods" useGeneratedKeys="true" keyProperty="id">
     insert into kill_goods (id, name, stock, 
       in_stock, start_kill_time)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{stock,jdbcType=INTEGER}, 
