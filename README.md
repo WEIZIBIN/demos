@@ -33,3 +33,55 @@
 [![jdk](https://img.shields.io/badge/jdk-v1.8-brightgreen.svg)]()
 
 该模块使用SpringBoot搭建Web工程，Thymeleaf作为模板引擎，Controller中调用服务的接口。
+
+## redis-demo
+[redis](https://redis.io/)是开源的基于内存key-value存储系统，也是一个数据结构服务器
+
+### redis-data types
+* Binary-safe strings
+* Lists
+* Sets
+* Sorted sets
+* Hashes
+* Bit arrays (or simply bitmaps)
+* HyperLogLogs
+
+### kill goods service
+
+[![spring&springmvc](https://img.shields.io/badge/spring&springmvc-v4.3.7-brightgreen.svg)]()
+[![mybatis](https://img.shields.io/badge/mybatis-v3.2.8-brightgreen.svg)]()
+[![mysql](https://img.shields.io/badge/mysql-v3.2.8-brightgreen.svg)]()
+[![jedis](https://img.shields.io/badge/jedis-v2.8.0-brightgreen.svg)]()
+[![redis](https://img.shields.io/badge/redis-v4.0.6-brightgreen.svg)]()
+[![jdk](https://img.shields.io/badge/jdk-v1.8-brightgreen.svg)]()
+
+本文运用redis作为中间缓存开发了一个秒杀业务Demo。
+
+秒杀场景具有以下特点：
+* 高并发
+* 请求数远超库存数
+* 要求响应时效较高
+
+对同一个商品进行读取更新库存，数据库中高并发单行更新响应慢，可承受并发量低，用户体验差，甚至可能产生死锁
+
+数据库的读写成为了秒杀业务瓶颈
+
+在本文中，运用redis完成秒杀业务中读写商品及库存操作，特有的原子性操作处理库存的减量，并定时持续化到数据库中
+
+### 秒杀业务思路
+
+* 添加商品：
+
+商户添加秒杀商品->存入数据库->商品信息及库存存入redis缓存（或是秒杀前再存入缓存）
+
+* 秒杀商品：
+
+用户点击秒杀商品按钮->redis获取商品信息->判断是否已经到秒杀时间->redis获取库存->判断库存->秒杀->返回秒杀结果
+
+* 定时持久化：
+
+读取redis中所有库存->迭代更新到数据库中
+
+Btw：其实秒杀业务优化还有很多学问，包括用户限流、异步处理等。
+
+由于本Demo展示的重点在于redis的运用，其他的内容会再做Demo分享出来。
