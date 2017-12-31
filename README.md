@@ -50,7 +50,7 @@
 
 [![spring&springmvc](https://img.shields.io/badge/spring&springmvc-v4.3.7-brightgreen.svg)]()
 [![mybatis](https://img.shields.io/badge/mybatis-v3.2.8-brightgreen.svg)]()
-[![mysql](https://img.shields.io/badge/mysql-v3.2.8-brightgreen.svg)]()
+[![mysql](https://img.shields.io/badge/mysql-v5.1.73-brightgreen.svg)]()
 [![jedis](https://img.shields.io/badge/jedis-v2.8.0-brightgreen.svg)]()
 [![redis](https://img.shields.io/badge/redis-v4.0.6-brightgreen.svg)]()
 [![jdk](https://img.shields.io/badge/jdk-v1.8-brightgreen.svg)]()
