@@ -6,6 +6,7 @@ import github.weizibin.mapper.KillGoodsMapper;
 import github.weizibin.mapper.KillGoodsRecordMapper;
 import github.weizibin.po.KillGoods;
 import github.weizibin.po.KillGoodsRecord;
+import github.weizibin.response.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,12 +57,19 @@ public class KillGoodsService {
     }
 
     @Transactional
-    public int killByRedis(int killGoodsId, int customerId) {
-        if (killGoodsCache.getKillStock(killGoodsId) <= 0) {
-            return -1;
+    public ServiceResponse killByRedis(int killGoodsId, int customerId) {
+        ServiceResponse serviceResponse = new ServiceResponse();
+        if (killGoodsCache.getById(killGoodsId).getStartKillTime().compareTo(new Date()) > 0) {
+            serviceResponse.setSuccess(Boolean.FALSE);
+            serviceResponse.setResCode(-1);
+            serviceResponse.setMsg("not start killing!");
+            return serviceResponse;
         }
-        if (!killGoodsCache.killStock(killGoodsId)) {
-            return -1;
+        if (killGoodsCache.getKillStock(killGoodsId) <= 0 || !killGoodsCache.killStock(killGoodsId)) {
+            serviceResponse.setSuccess(Boolean.FALSE);
+            serviceResponse.setResCode(-1);
+            serviceResponse.setMsg("no available stock!");
+            return serviceResponse;
         }
         KillGoodsRecord killGoodsRecord = new KillGoodsRecord();
         killGoodsRecord.setGoodsId(killGoodsId);
@@ -69,8 +77,19 @@ public class KillGoodsService {
         killGoodsRecord.setKillTime(new Date());
         int insert = killGoodsRecordMapper.insert(killGoodsRecord);
         if (insert == 1) {
-            return 0;
+            serviceResponse.setSuccess(Boolean.TRUE);
+            serviceResponse.setResCode(0);
+            serviceResponse.setMsg("kill success");
+            return serviceResponse;
         }
-        return -1;
+        serviceResponse.setSuccess(Boolean.FALSE);
+        serviceResponse.setResCode(-2);
+        serviceResponse.setMsg("error, please kill again");
+        return serviceResponse;
+    }
+
+    @Transactional
+    public int updateSeletive(KillGoods killGoods) {
+        return killGoodsMapper.updateByPrimaryKeySelective(killGoods);
     }
 }

@@ -1,6 +1,7 @@
 package github.weizibin.controller;
 
 import github.weizibin.po.KillGoods;
+import github.weizibin.response.ServiceResponse;
 import github.weizibin.service.KillGoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,12 +55,8 @@ public class IndexController {
 
     @RequestMapping(value = "/kill", method = {RequestMethod.POST})
     public String kill(Integer killGoodsId, HttpSession session, RedirectAttributes redirectAttributes) {
-        int resCode = killGoodsService.killByRedis(killGoodsId, (Integer) session.getAttribute(ATTR_CUSTOMER_ID));
-        if (resCode == 0) {
-            redirectAttributes.addAttribute("msg", "kill success!");
-        } else {
-            redirectAttributes.addAttribute("msg", "kill fail!");
-        }
+        ServiceResponse serviceResponse = killGoodsService.killByRedis(killGoodsId, (Integer) session.getAttribute(ATTR_CUSTOMER_ID));
+        redirectAttributes.addFlashAttribute("msg", serviceResponse.getMsg());
         return "redirect:/kill";
     }
 
@@ -72,11 +69,6 @@ public class IndexController {
     public String setCustomerId(Integer customerId, HttpSession session) {
         session.setAttribute(ATTR_CUSTOMER_ID, customerId);
         return "redirect:/kill";
-    }
-
-    @RequestMapping("/error/access_denied")
-    public String access_denied() {
-        return "common/access_denied";
     }
 
 }
