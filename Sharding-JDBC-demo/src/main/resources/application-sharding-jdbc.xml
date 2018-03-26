@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:sharding="http://shardingjdbc.io/schema/shardingjdbc/sharding"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://shardingjdbc.io/schema/shardingjdbc/sharding
+                        http://shardingjdbc.io/schema/shardingjdbc/sharding/sharding.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true" />
+
+	<bean id="ds_0" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.ds_0.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.ds_0.url}" />
+		<property name="user" value="${jdbc.ds_0.username}" />
+		<property name="password" value="${jdbc.ds_0.password}" />
+		<property name="minPoolSize" value="2" />
+		<property name="maxPoolSize" value="60" />
+		<property name="initialPoolSize" value="10" />
+		<property name="maxIdleTime" value="60" />
+		<property name="acquireIncrement" value="2" />
+	</bean>
+
+	<bean id="ds_1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.ds_1.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.ds_1.url}" />
+		<property name="user" value="${jdbc.ds_1.username}" />
+		<property name="password" value="${jdbc.ds_1.password}" />
+		<property name="minPoolSize" value="2" />
+		<property name="maxPoolSize" value="60" />
+		<property name="initialPoolSize" value="10" />
+		<property name="maxIdleTime" value="60" />
+		<property name="acquireIncrement" value="2" />
+	</bean>
+
+	<sharding:standard-strategy id="databaseShardingStrategy" sharding-column="order_id" precise-algorithm-class="github.weizibin.algorithm.PreciseModuloDatabaseShardingAlgorithm"/>
+	<sharding:standard-strategy id="tableShardingStrategy" sharding-column="order_id" precise-algorithm-class="github.weizibin.algorithm.PreciseModuloTableShardingAlgorithm"/>
+
+	<sharding:data-source id="shardingDataSource">
+		<sharding:sharding-rule data-source-names="ds_0, ds_1">
+			<sharding:table-rules>
+				<sharding:table-rule logic-table="order" actual-data-nodes="ds_${0..1}.order_${0..1}" database-strategy-ref="databaseShardingStrategy" table-strategy-ref="tableShardingStrategy" generate-key-column="order_id" />
+			</sharding:table-rules>
+		</sharding:sharding-rule>
+	</sharding:data-source>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="shardingDataSource" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="shardingDataSource"/>
+		<property name="mapperLocations" value="classpath:github/weizibin/persistence/*.xml" />
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="github.weizibin.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+</beans>
