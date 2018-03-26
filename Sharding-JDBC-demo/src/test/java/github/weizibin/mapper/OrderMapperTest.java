@@ -24,15 +24,16 @@ public class OrderMapperTest {
     public void insert() throws Exception {
         Order order = new Order();
         Date date = new Date();
-        order.setOrderId("" + date.getTime());
+        order.setOrderId(date.getTime());
         order.setCreateTime(date);
         int insert = orderMapper.insert(order);
         assert insert == 1;
     }
 
     @org.junit.Test
-    public void selectByPrimaryKey() throws Exception {
-        orderMapper.selectByPrimaryKey(1);
+    public void selectByOrderId() throws Exception {
+        Order order = orderMapper.selectByOrderId(1522076169968L);
+        System.out.println(order.getOrderId());
     }
 
 }

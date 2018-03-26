@@ -16,4 +16,6 @@ public interface OrderMapper {
     int updateByPrimaryKeySelective(Order record);
 
     int updateByPrimaryKey(Order record);
+
+    Order selectByOrderId(Long orderId);
 }

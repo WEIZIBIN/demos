@@ -5,7 +5,7 @@ import java.util.Date;
 public class Order {
     private Integer id;
 
-    private String orderId;
+    private Long orderId;
 
     private Date createTime;
 
@@ -17,11 +17,11 @@ public class Order {
         this.id = id;
     }
 
-    public String getOrderId() {
+    public Long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(String orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 

@@ -3,7 +3,7 @@
 <mapper namespace="github.weizibin.mapper.OrderMapper" >
   <resultMap id="BaseResultMap" type="github.weizibin.po.Order" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -15,6 +15,12 @@
     from `order`
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from `order`
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from `order`
     where id = #{id,jdbcType=INTEGER}
@@ -22,7 +28,7 @@
   <insert id="insert" parameterType="github.weizibin.po.Order" >
     insert into `order` (id, order_id, create_time
       )
-    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="github.weizibin.po.Order" >
@@ -43,7 +49,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="orderId != null" >
-        #{orderId,jdbcType=VARCHAR},
+        #{orderId,jdbcType=BIGINT},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -54,7 +60,7 @@
     update `order`
     <set >
       <if test="orderId != null" >
-        order_id = #{orderId,jdbcType=VARCHAR},
+        order_id = #{orderId,jdbcType=BIGINT},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -64,7 +70,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="github.weizibin.po.Order" >
     update `order`
-    set order_id = #{orderId,jdbcType=VARCHAR},
+    set order_id = #{orderId,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
