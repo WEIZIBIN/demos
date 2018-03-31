@@ -32,8 +32,8 @@ public class OrderMapperTest {
 
     @org.junit.Test
     public void selectByOrderId() throws Exception {
-        Order order = orderMapper.selectByOrderId(1522076169968L);
-        System.out.println(order.getOrderId());
+        Order order = orderMapper.selectByOrderId(1522113327557L);
+        System.out.println(order == null);
     }
 
 }
