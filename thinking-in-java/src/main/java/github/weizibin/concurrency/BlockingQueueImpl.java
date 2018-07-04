@@ -1,6 +1,8 @@
 package github.weizibin.concurrency;
 
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BlockingQueueImpl<T> implements BlockingQueue<T> {
 
@@ -30,6 +32,12 @@ public class BlockingQueueImpl<T> implements BlockingQueue<T> {
         }
     }
 
+    @Override
+    public int size() {
+        return tail > head ? tail - head :
+                tail == head ? item[tail] == null ?  0 : size : size - head + tail;
+    }
+
     public T peek() {
         synchronized (this) {
             return (T) item[head];
@@ -45,7 +53,7 @@ public class BlockingQueueImpl<T> implements BlockingQueue<T> {
                 wait();
             }
             item[tail] = t;
-            tail = (tail++) % size;
+            tail = (tail + 1) % size;
             notifyAll();
         }
     }
@@ -63,10 +71,6 @@ public class BlockingQueueImpl<T> implements BlockingQueue<T> {
         }
     }
 
-    public int size() {
-        return size;
-    }
-
     private boolean isEmpty() {
         synchronized (this) {
             return item[head] == null;
@@ -81,50 +85,118 @@ public class BlockingQueueImpl<T> implements BlockingQueue<T> {
 
 }
 
-class Consumer<T> {
-    public Consumer(BlockingQueue<T> queue) {
+class MessageConsumer {
+    private BlockingQueue<Message> queue;
+    private ExecutorService executorService;
 
+    public MessageConsumer(BlockingQueue<Message> queue) {
+        this.queue = queue;
+        executorService= Executors.newSingleThreadExecutor();
+        executorService.submit(new MessageConsumeTask());
+    }
+
+    private class MessageConsumeTask implements Runnable {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    Message message = queue.poll();
+                    System.out.println("" + Thread.currentThread() + " " + message + " dequeue");
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
 
-class Provider<T> {
+class MessageProvider {
 
-    private BlockingQueue<T> queue;
+    private BlockingQueue<Message> queue;
+    private ExecutorService executorService;
+    private int count;
 
-    public Provider(BlockingQueue<T> queue) {
+    public MessageProvider(BlockingQueue<Message> queue) {
         this.queue = queue;
-
+        executorService= Executors.newSingleThreadExecutor();
+        executorService.submit(new MessageProvideTask());
     }
 
-    private class ProvideTask<T> implements Runnable {
+    private Message provide() {
+        return new Message(String.valueOf(new Date().getTime()), "Message" + (++count));
+    }
+
+    private class MessageProvideTask implements Runnable {
         @Override
         public void run() {
-            
+            while (true) {
+                Message message = provide();
+                try {
+                    queue.put(message);
+                    System.out.println("" + Thread.currentThread() + " " + message + " enqueue");
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+}
+class QueueInspector {
+
+    private BlockingQueue<Message> queue;
+    private ExecutorService executorService;
+
+    public QueueInspector(BlockingQueue<Message> queue) {
+        this.queue = queue;
+        executorService= Executors.newSingleThreadExecutor();
+        executorService.submit(new QueueInspectTask());
+    }
+
+    private class QueueInspectTask implements Runnable {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    System.out.println(String.format("%s queue size[%s]",
+                            Thread.currentThread(), queue.size(), queue.peek()));
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
 }
 
 class Message {
-    private String id;
+    private String timestamp;
     private String content;
 
-    public Message(String id, String content) {
-        this.id = id;
+    public Message(String timestamp, String content) {
+        this.timestamp = timestamp;
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "timestamp='" + timestamp + '\'' +
+                ", content='" + content + '\'' +
+                '}';
     }
 }
 
 class Test {
     public static void main(String[] args) throws InterruptedException {
-        BlockingQueue<Object> blockingQueue = new BlockingQueueImpl<>(64);
-        for (int i = 0; i < 65; i++) {
-            blockingQueue.put(new Object());
-        }
-        for (int i = 0; i < 65; i++) {
-            System.out.println(blockingQueue.(5, TimeUnit.SECONDS));
-        }
-
+        BlockingQueue<Message> blockingQueue = new BlockingQueueImpl<>(16);
+        new MessageProvider(blockingQueue);
+        new MessageConsumer(blockingQueue);
+        new MessageConsumer(blockingQueue);
+        new QueueInspector(blockingQueue);
     }
 }
 
@@ -135,8 +207,7 @@ interface BlockingQueue<T> {
 
     T peek();
 
-    int size();
-
     void clear();
 
+    int size();
 }
