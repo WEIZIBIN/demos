@@ -144,12 +144,12 @@ class MessageProvider {
     }
 
 }
-class QueueInspector {
+class QueueInspector<T> {
 
-    private BlockingQueue<Message> queue;
+    private BlockingQueue<T> queue;
     private ExecutorService executorService;
 
-    public QueueInspector(BlockingQueue<Message> queue) {
+    public QueueInspector(BlockingQueue<T> queue) {
         this.queue = queue;
         executorService= Executors.newSingleThreadExecutor();
         executorService.submit(new QueueInspectTask());
@@ -196,7 +196,7 @@ class Test {
         new MessageProvider(blockingQueue);
         new MessageConsumer(blockingQueue);
         new MessageConsumer(blockingQueue);
-        new QueueInspector(blockingQueue);
+        new QueueInspector<Message>(blockingQueue);
     }
 }
 
