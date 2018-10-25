@@ -2,55 +2,68 @@ package github.weizibin.datastructure;
 
 import github.weizibin.datastructure.util.TreeUtils;
 
-// TODO: 2018/10/24
-public class AVLTree<T extends Comparable> {
+public class AVLTree {
 
-    public TreeNode<T> root;
-
-    public void insert(T content) {
-        TreeNode<T> newNode = new TreeNode<>(null, null, content);
+    public static <T extends Comparable> TreeNode<T> insert(T content, TreeNode<T> root) {
         if (root == null) {
-            root = newNode;
-            return;
+            TreeNode<T> newNode = new TreeNode<>(null, null, content);
+            return newNode;
         }
 
-        TreeNode<T> node = root;
-        while (node != null) {
-            boolean less = content.compareTo(node.content) < 0;
-            TreeNode<T> next = less ? node.left : node.right;
-            if (next == null) {
-                if (less) {
-                    node.left = newNode;
-                } else {
-                    node.right = newNode;
+        if (content.compareTo(root.content) < 0) {
+            root.left = insert(content, root.left);
+            if (TreeUtils.level(root.left) - TreeUtils.level(root.right) == 2) {
+                if (content.compareTo(root.left.content) > 0) {
+                    root.left = leftRotate(root.left);
                 }
+                root = rightRotate(root);
             }
-            node = next;
+        } else if (content.compareTo(root.content) > 0) {
+            root.right = insert(content, root.right);
+            if (TreeUtils.level(root.right) - TreeUtils.level(root.left) == 2) {
+                if (content.compareTo(root.right.content) < 0) {
+                    root.right = rightRotate(root.right);
+                }
+                root = leftRotate(root);
+            }
         }
+        return root;
+    }
 
+    public static <T extends Comparable> boolean exist(T content, TreeNode<T> root) {
+        if (root == null) {
+            return false;
+        }
+        int compare = root.content.compareTo(content);
+        return compare == 0 ? true : (compare > 0) ? exist(content, root.left) : exist(content, root.right);
     }
 
     private static TreeNode leftRotate(TreeNode node) {
         TreeNode root = node.right;
+        node.right = root.left;
         root.left = node;
-        node.right = null;
         return root;
     }
 
     private static TreeNode rightRotate(TreeNode node) {
         TreeNode root = node.left;
+        node.left = root.right;
         root.right = node;
-        node.left = null;
         return root;
     }
 
     public static void main(String[] args) {
-        AVLTree<Integer> avlTree = new AVLTree<>();
-        avlTree.insert(1);
-        avlTree.insert(2);
-        avlTree.insert(3);
-        avlTree.insert(4);
-        TreeUtils.print(avlTree.root);
+        TreeNode<Integer> t = AVLTree.insert(1, null);
+        t = AVLTree.insert(7, t);
+        t = AVLTree.insert(3, t);
+        t = AVLTree.insert(2, t);
+        t = AVLTree.insert(6, t);
+        t = AVLTree.insert(10, t);
+        t = AVLTree.insert(5, t);
+        t = AVLTree.insert(9, t);
+        t = AVLTree.insert(8, t);
+        t = AVLTree.insert(4, t);
+        TreeUtils.print(t);
     }
 
 }
