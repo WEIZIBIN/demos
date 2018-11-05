@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: spring-cloud-provider
+  cloud:
+    config:
+      name: spring-cloud-provider
+      profile: local
+      uri: http://localhost:8888
+
+server:
+  port: 8081
