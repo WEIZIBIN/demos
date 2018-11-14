@@ -1,8 +1,8 @@
 package github.weizibin.datastructure;
 
-public class Heap<T extends Comparable> {
+public class Heap<T extends Comparable<? super T>> {
 
-    public T[] heap;
+    private T[] heap;
     private int size;
 
     public Heap(int initialCapacity) {

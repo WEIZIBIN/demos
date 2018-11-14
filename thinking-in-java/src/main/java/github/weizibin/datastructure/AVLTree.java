@@ -4,7 +4,7 @@ import github.weizibin.datastructure.util.TreeUtils;
 
 public class AVLTree {
 
-    public static <T extends Comparable> TreeNode<T> insert(T content, TreeNode<T> root) {
+    public static <T extends Comparable<? super T>> TreeNode<T> insert(T content, TreeNode<T> root) {
         if (root == null) {
             TreeNode<T> newNode = new TreeNode<>(null, null, content);
             return newNode;
@@ -30,7 +30,7 @@ public class AVLTree {
         return root;
     }
 
-    public static <T extends Comparable> boolean exist(T content, TreeNode<T> root) {
+    public static <T extends Comparable<? super T>> boolean exist(T content, TreeNode<T> root) {
         if (root == null) {
             return false;
         }
