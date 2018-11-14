@@ -1,6 +1,5 @@
 package github.weizibin.datastructure;
 
-// TODO: 2018/10/24
 public class TreeNode<T> {
     public TreeNode<T> left;
     public TreeNode<T> right;
