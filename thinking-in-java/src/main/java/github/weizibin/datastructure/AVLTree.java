@@ -4,46 +4,46 @@ import github.weizibin.datastructure.util.TreeUtils;
 
 public class AVLTree {
 
-    public static <T extends Comparable<? super T>> TreeNode<T> insert(T content, TreeNode<T> root) {
+    public static <T extends Comparable<? super T>> TreeNode<T> insert(T val, TreeNode<T> root) {
         if (root == null) {
-            TreeNode<T> newNode = new TreeNode<>(null, null, content);
+            TreeNode<T> newNode = new TreeNode<>(null, null, val);
             return newNode;
         }
 
-        if (content.compareTo(root.content) < 0) {
-            root.left = insert(content, root.left);
+        if (val.compareTo(root.val) < 0) {
+            root.left = insert(val, root.left);
             root = balance(root);
-        } else if (content.compareTo(root.content) > 0) {
-            root.right = insert(content, root.right);
+        } else if (val.compareTo(root.val) > 0) {
+            root.right = insert(val, root.right);
             root = balance(root);
         }
         return root;
     }
 
-    public static <T extends Comparable<? super T>> boolean exist(T content, TreeNode<T> root) {
+    public static <T extends Comparable<? super T>> boolean exist(T val, TreeNode<T> root) {
         if (root == null) {
             return false;
         }
-        int compare = root.content.compareTo(content);
-        return compare == 0 ? true : (compare > 0) ? exist(content, root.left) : exist(content, root.right);
+        int compare = root.val.compareTo(val);
+        return compare == 0 ? true : (compare > 0) ? exist(val, root.left) : exist(val, root.right);
     }
 
-    public static <T extends Comparable<? super T>> TreeNode<T> remove(T content, TreeNode<T> root) {
-        return delete(content, root);
+    public static <T extends Comparable<? super T>> TreeNode<T> remove(T val, TreeNode<T> root) {
+        return delete(val, root);
     }
 
-    private static <T extends Comparable<? super T>> TreeNode<T> delete(T content, TreeNode<T> node) {
+    private static <T extends Comparable<? super T>> TreeNode<T> delete(T val, TreeNode<T> node) {
         if (node == null) {
             return null;
         }
         // search
-        int compare = node.content.compareTo(content);
+        int compare = node.val.compareTo(val);
         if (compare != 0) {
             if (compare > 0) {
-                node.left = delete(content, node.left);
+                node.left = delete(val, node.left);
             }
             if (compare < 0) {
-                node.right = delete(content, node.right);
+                node.right = delete(val, node.right);
             }
         } else {
             // search for replace element

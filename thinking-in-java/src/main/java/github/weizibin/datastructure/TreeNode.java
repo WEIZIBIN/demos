@@ -3,16 +3,16 @@ package github.weizibin.datastructure;
 public class TreeNode<T> {
     public TreeNode<T> left;
     public TreeNode<T> right;
-    public T content;
+    public T val;
 
-    public TreeNode(TreeNode<T> left, TreeNode<T> right, T content) {
+    public TreeNode(TreeNode<T> left, TreeNode<T> right, T val) {
         this.left = left;
         this.right = right;
-        this.content = content;
+        this.val = val;
     }
 
     @Override
     public String toString() {
-        return content.toString();
+        return val.toString();
     }
 }
